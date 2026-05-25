@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>تدريب تفاعلي: الأفعال الخمسة</title>
+<style>
+body{margin:0;font-family:Tahoma,Arial;background:linear-gradient(135deg,#0f172a,#1e3a8a);color:white;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.container{width:92%;max-width:900px;background:rgba(255,255,255,.12);backdrop-filter:blur(10px);border-radius:28px;padding:30px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+h1{text-align:center;margin-top:0;color:#fde68a}
+.card{background:white;color:#111827;border-radius:24px;padding:25px;margin-top:20px;display:none}
+.card.active{display:block}
+.q{font-size:26px;font-weight:bold;margin-bottom:20px}
+.choice{display:block;width:100%;margin:12px 0;padding:16px;border:0;border-radius:16px;background:#e0f2fe;font-size:20px;cursor:pointer;text-align:right}
+.choice:hover{background:#bae6fd;transform:scale(1.01)}
+.correct{background:#bbf7d0!important}
+.wrong{background:#fecaca!important}
+.feedback{font-size:20px;font-weight:bold;margin-top:15px;min-height:35px}
+.nav{text-align:center;margin-top:20px}
+.nav button{padding:12px 28px;border:0;border-radius:999px;background:#facc15;font-size:18px;font-weight:bold;cursor:pointer}
+.score{text-align:center;font-size:32px;font-weight:bold;color:#fde68a}
+.badge{text-align:center;font-size:24px;margin-top:15px}
+.footer{text-align:center;margin-top:20px;color:#cbd5e1}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎯 تدريب تفاعلي: الأفعال الخمسة</h1>
+
+<div class="card active" id="q1">
+  <div class="q">1) حدّد الفعل من الأفعال الخمسة في الجملة:<br>الطلاب يشاركون في النشاط المدرسي.</div>
+  <button class="choice" onclick="answer(this,false,'q1')">الطلاب</button>
+  <button class="choice" onclick="answer(this,true,'q1')">يشاركون</button>
+  <button class="choice" onclick="answer(this,false,'q1')">النشاط</button>
+  <button class="choice" onclick="answer(this,false,'q1')">المدرسي</button>
+  <div class="feedback"></div>
+</div>
+
+<div class="card" id="q2">
+  <div class="q">2) ما علامة رفع الأفعال الخمسة؟</div>
+  <button class="choice" onclick="answer(this,false,'q2')">الضمة الظاهرة</button>
+  <button class="choice" onclick="answer(this,false,'q2')">الفتحة</button>
+  <button class="choice" onclick="answer(this,true,'q2')">ثبوت النون</button>
+  <button class="choice" onclick="answer(this,false,'q2')">حذف النون</button>
+  <div class="feedback"></div>
+</div>
+
+<div class="card" id="q3">
+  <div class="q">3) أعرب الفعل في الجملة:<br>لن تهملوا واجباتكم.</div>
+  <button class="choice" onclick="answer(this,false,'q3')">مرفوع بثبوت النون</button>
+  <button class="choice" onclick="answer(this,true,'q3')">منصوب بحذف النون</button>
+  <button class="choice" onclick="answer(this,false,'q3')">مجزوم بحذف النون</button>
+  <button class="choice" onclick="answer(this,false,'q3')">مبني على السكون</button>
+  <div class="feedback"></div>
+</div>
+
+<div class="card" id="result">
+  <div class="score" id="scoreText"></div>
+  <div class="badge" id="badgeText"></div>
+  <div class="nav"><button onclick="restart()">إعادة التدريب 🔁</button></div>
+</div>
+
+<div class="nav">
+  <button id="nextBtn" onclick="next()">التالي ⬅</button>
+</div>
+<div class="footer">إعداد الأستاذ أحمد السعود | الصف الثامن</div>
+</div>
+
+<script>
+let current=1, score=0;
+let answered={q1:false,q2:false,q3:false};
+
+function answer(btn, correct, qid){
+  if(answered[qid]) return;
+  answered[qid]=true;
+  const parent=document.getElementById(qid);
+  const fb=parent.querySelector('.feedback');
+  if(correct){
+    btn.classList.add('correct');
+    score++;
+    fb.innerHTML='✅ أحسنت! إجابة صحيحة.';
+    fb.style.color='#15803d';
+  }else{
+    btn.classList.add('wrong');
+    fb.innerHTML='❌ غير صحيح. راجع القاعدة وحاول في السؤال التالي.';
+    fb.style.color='#b91c1c';
+    parent.querySelectorAll('.choice').forEach(b=>{
+      if(b.getAttribute('onclick').includes('true')) b.classList.add('correct');
+    });
+  }
+}
+
+function next(){
+  document.getElementById('q'+current)?.classList.remove('active');
+  current++;
+  if(current<=3){
+    document.getElementById('q'+current).classList.add('active');
+  }else{
+    document.getElementById('nextBtn').style.display='none';
+    document.getElementById('result').classList.add('active');
+    document.getElementById('scoreText').innerText='نتيجتك: '+score+' / 3';
+    let msg = score===3?'🏆 خبير الأفعال الخمسة':
+              score===2?'🌟 ممتاز، تحتاج مراجعة بسيطة':
+              score===1?'👍 جيد، راجع الدرس مرة أخرى':'💪 أعد المحاولة وستتحسن';
+    document.getElementById('badgeText').innerText=msg;
+  }
+}
+
+function restart(){ location.reload(); }
+</script>
+</body>
+</html>
